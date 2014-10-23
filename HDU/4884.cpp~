@@ -1,0 +1,63 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1005;
+
+int n, t, k, m;
+int sumT;
+
+struct Cus {
+
+	int t;
+	int k;
+	int num;
+	int ans;
+} c[N];
+
+int main () {
+
+	int T;
+	int H, M;
+	scanf ("%d", &T);
+	while (T--) {
+
+		scanf ("%d%d%d%d", &n, &t, &k, &m);
+		for (int i = 0; i < m; i++) {
+			scanf ("%d:%d%d%d", &H, &M, &c[i].k, &c[i].num);
+			c[i].t = H * 60 + M;
+			c[i].ans = -1;
+		}
+
+		sumT = c[0].t;
+		for (int i = 0; i < m; i++) {
+
+			if (c[i].ans != -1)
+				continue;
+			int K = (c[i].num + k - 1) / k;
+			int have = K * k;	
+			int tmp = max (sumT, c[i].t) + (K - 1) * t;
+			for (int j = i; j < m; j++) {
+			
+				if (c[j].t > tmp || !have) 
+					break;
+				if (c[j].k == c[i].k) {
+					
+					int mm = min (c[j].num, have);
+					c[j].num -= mm;
+					have -= mm;
+				}
+				if (c[j].num == 0 && c[j].ans == -1) 
+					c[j].ans = tmp + t;
+			}
+			sumT = tmp + t;
+		}
+		for (int i = 0; i < m; i++)
+			printf ("%02d:%02d\n",(c[i].ans / 60) % 24, c[i].ans % 60); 
+		if (T)
+			printf ("\n");
+	}
+	return 0;
+}

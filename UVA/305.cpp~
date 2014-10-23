@@ -1,0 +1,46 @@
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+const int N = 20;
+
+int solve (int k) {
+
+	int n = 2 * k;
+	int m = k + 1;
+	int pre, cnt;
+	while (1) {
+
+		cnt = 1;
+		pre = (m % n) == 0 ? n : m % n;
+		while (cnt <= k) {
+			if (pre <= k)
+				break;
+			pre = (pre + m - 1) % (n - cnt) == 0 ? (n - cnt) : (pre + m - 1) % (n - cnt); 
+			cnt++;
+		}
+
+		if (cnt == k + 1)
+			return m;
+		else {
+		
+			if (m % n == 0)
+				m += k + 1;
+			else
+				m++;
+		}
+	}
+}
+
+int main () {
+
+	int k;
+	int ans[N];
+	for (int i = 1; i < 15; i++)
+		ans[i] = solve(i);
+	while (scanf ("%d", &k) && k) {
+		printf ("%d\n", ans[k]);
+	}
+	return 0;
+}

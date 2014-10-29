@@ -1,0 +1,89 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int maxn = 2e4 + 5;
+int n, s[maxn];
+
+struct Ans {
+
+	int v, l, r;
+	Ans () {}
+	Ans (int v, int , int r) : v(v), l(l), r(r){}
+	void set (int v, int , int r) {
+		this->v = v;
+		this->l = l;
+		this->r = r;
+	}
+};
+
+Ans maxsum (int l, int r) {
+
+	if (l == r) 
+		return Ans(s[l], l, r);
+
+	Ans max_sum;
+	int m = l + (r - l)>>1;
+	Ans Lmax = maxsum(l, m);
+	Ans Rmax = maxsum(m, r);
+	if (Lmax.v < Rmax.v) 
+		max_sum = Lmax;
+	else if (Lmax.v > Rmax.v)
+		max_sum = Rmax;
+	else  {	
+		if (Lmax.r - Lmax.l < Rmax.r - Rmax.l)
+			max_sum = Rmax;
+		else
+			max_sum = Lmax;
+	}
+
+	Ans Lp(s[m], m, m), Rp(s[m], m, m);	
+	int tmp = s[m];
+	for (int i = m - 1; i >= l; i--) {
+		tmp += s[i];
+		if (tmp >= Lp.v) 
+			Lp.set(tmp, i, m);
+	}
+
+	tmp = s[m];
+	for (int i = m + 1; i <= r; i++) {
+		tmp += s[i];
+		if (tmp >= Rp.v) 
+			Rp.set(tmp, m + 1, i);
+	}
+
+	Ans Center(Lp.v + Rp.v - s[m], Lp.l, Rp.r);
+	if (Center.v > max_sum.v) 
+		max_sum = Center;
+	else if (Center.v == max_sum.v) {
+		int dis1 = Center.r - Center.l;
+		int dis2 = max_sum.r - max_sum.l;
+		if (dis1 > dis2 || (dis1 == dis2 && Center.l < max_sum.l))
+			max_sum = Center;
+	}
+	return max_sum;
+}
+
+int main () {
+
+	int T, l, r;
+	scanf ("%d", &T);
+
+	for (int cas = 1; cas <= T; cas++) {  
+
+		scanf ("%d", &n);
+		for (int i = 0; i < n - 1; i++)
+			scanf ("%d", &s[i]);
+
+		Ans result = maxsum(0, n - 2);
+		printf ("%d\n", result.v);
+		if (result.v < 0)  
+			printf ("Route %d has no nice parts\n", cas);  
+		else  
+			printf ("The nicest part of route %d is between stops %d and %d\n", cas, result.l + 1, result.r + 2);  
+	}  
+	return 0;  
+}  
+

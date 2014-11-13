@@ -18,7 +18,7 @@ int main () {
 		for (int i = 1; i <= n; i++)
 			scanf ("%d", &arr[i]);
 	
-		for (int i = 1; i <= n; i++)
+		for (int i = 1; i <= n; i++) 
 			l[i] = c[i] = 1;
 	
 		int ans = 1; 

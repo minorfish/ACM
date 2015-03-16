@@ -8,7 +8,7 @@ int main () {
 	int T;
 	srand(time(0));
 	while (1) {
-		T = rand() % 1000;
+		T = rand() % 100;
 		if (T)
 			break;
 	}
